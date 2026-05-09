@@ -2,7 +2,7 @@ import java.awt.*;
 import java.util.*;
 import java.util.List;
 
-public class Map {
+public class GameMap {
     private Map<Point, Entity> map = new HashMap<>();
 
     void addEntity(Point position, Entity entity) {
@@ -47,7 +47,7 @@ if (!isCellEmpty(position)==true){
 
     public Set<Point> getAllGrassPositions() {
         Set<Point> result = new HashSet<>();
-        for (Map.Entry<Point, Entity> entry : map.entrySet()) {
+        for (GameMap.Entry<Point, Entity> entry : map.entrySet()) {
             if (entry.getValue() instanceof Grass) {
                 result.add(entry.getKey());
             }
