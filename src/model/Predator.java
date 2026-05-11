@@ -1,3 +1,7 @@
+package model;
+
+import pathfinder.PathFinder;
+
 import java.awt.*;
 
 public class Predator extends Creature {

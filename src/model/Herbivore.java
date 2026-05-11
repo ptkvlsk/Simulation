@@ -1,3 +1,7 @@
+package model;
+
+import pathfinder.PathFinder;
+
 import java.awt.*;
 
 public class Herbivore extends Creature {
@@ -11,6 +15,7 @@ public class Herbivore extends Creature {
 
     @Override
     public void makeMove(GameMap map) {
+        System.out.println("makeMove called for herbivore at " + position);
         Point currentPos = this.position;
         if (map.getEntityAt(currentPos) instanceof Grass) {
             map.removeEntity(currentPos);
@@ -23,7 +28,9 @@ public class Herbivore extends Creature {
             map.removeEntity(currentPos);
             position = nextStep;
             map.addEntity(position, this);
+            System.out.println("Next step: " + nextStep);
         }
+        System.out.println("MakeMove called for herbivore at " + position);
     }
 
     public void takeDamage(int attackPower) {

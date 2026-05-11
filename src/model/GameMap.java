@@ -1,20 +1,31 @@
+package model;
+
 import java.awt.*;
 import java.util.*;
 import java.util.List;
 
 public class GameMap {
+    private int width;
+    private int height;
+
+    public GameMap(int width, int height) {
+        this.width = width;
+        this.height = height;
+        map = new HashMap<>();
+    }
+
     private Map<Point, Entity> map = new HashMap<>();
 
-    void addEntity(Point position, Entity entity) {
+    public void addEntity(Point position, Entity entity) {
         if (isCellEmpty(position) == true) {
-    map.put(position,entity);
+            map.put(position, entity);
         }
     }
 
-    void removeEntity(Point position) {
-if (!isCellEmpty(position)==true){
-    map.remove(position);
-}
+    public void removeEntity(Point position) {
+        if (!isCellEmpty(position) == true) {
+            map.remove(position);
+        }
     }
 
     public Entity getEntityAt(Point position) {
@@ -47,11 +58,19 @@ if (!isCellEmpty(position)==true){
 
     public Set<Point> getAllGrassPositions() {
         Set<Point> result = new HashSet<>();
-        for (GameMap.Entry<Point, Entity> entry : map.entrySet()) {
+        for (Map.Entry<Point, Entity> entry : map.entrySet()) {
             if (entry.getValue() instanceof Grass) {
                 result.add(entry.getKey());
             }
         }
         return result;
+    }
+
+    public int getWidth() {
+        return width;
+    }
+
+    public int getHeight() {
+        return height;
     }
 }

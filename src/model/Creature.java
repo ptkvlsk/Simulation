@@ -1,9 +1,11 @@
+package model;
+
 import java.awt.*;
 
 public abstract class Creature extends Entity {
     protected int speed;
-    protected int hp;
-    protected Point position;
+    public int hp;
+    public Point position;
 
 
     public Creature(int speed, int hp, Point position) {
