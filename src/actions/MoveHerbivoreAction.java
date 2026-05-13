@@ -12,7 +12,6 @@ public class MoveHerbivoreAction implements Action{
         List<Herbivore> herbivores = map.getAllHerbivores();
         for (Herbivore h: herbivores){
             h.makeMove(map);
-            System.out.println("Herbivore at " + h.position + " HP: " + h.hp);
         }
     }
 }

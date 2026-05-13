@@ -28,6 +28,10 @@ public class Simulation {
         }
         while (true) {
             nextTurn();
+            if (map.getAllHerbivores().isEmpty()){
+                System.out.println("No herbivorse left. Stop simulation");
+                break;
+            }
             try {
                 Thread.sleep(500);
             } catch (InterruptedException e) {
