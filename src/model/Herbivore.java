@@ -5,8 +5,8 @@ import pathfinder.PathFinder;
 import java.awt.*;
 
 public class Herbivore extends Creature {
-    public Herbivore(int speed, int hp, Point position) {
-        super(speed, hp, position);
+    public Herbivore(int speed, int hp, int maxHp, Point position) {
+        super(speed, hp, maxHp, position);
     }
 
     public void ateGrass() {
@@ -18,7 +18,7 @@ public class Herbivore extends Creature {
         Point currentPos = this.position;
         if (map.getEntityAt(currentPos) instanceof Grass) {
             map.removeEntity(currentPos);
-            this.hp += 2;
+            this.hp = Math.min(this.hp + 2, maxHp);
             return;
         }
         int[] x = {-1, 1, 0, 0};
@@ -32,7 +32,7 @@ public class Herbivore extends Creature {
                 map.removeEntity(currentPos);
                 position = neighbor;
                 map.addEntity(position, this);
-                this.hp += 2;
+                this.hp = Math.min(this.hp + 2, maxHp);
                 return;
             }
         }

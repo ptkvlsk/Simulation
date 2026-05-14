@@ -7,8 +7,8 @@ import java.awt.*;
 public class Predator extends Creature {
     protected int attackPower;
 
-    public Predator(int speed, int hp, int attackPower, Point position) {
-        super(speed, hp, position);
+    public Predator(int speed, int hp, int maxHp, int attackPower, Point position) {
+        super(speed, hp, maxHp, position);
         this.attackPower = attackPower;
 
     }
@@ -17,7 +17,6 @@ public class Predator extends Creature {
     public void makeMove(GameMap map) {
         Point currentPos = this.position;
 
-        // 1. Атака на текущей клетке (если травоядное там же)
         if (map.getEntityAt(currentPos) instanceof Herbivore) {
             Herbivore target = (Herbivore) map.getEntityAt(currentPos);
             target.takeDamage(this.attackPower);
@@ -27,7 +26,6 @@ public class Predator extends Creature {
             return;
         }
 
-        // 2. Проверка соседей
         int[] dx = {-1, 1, 0, 0};
         int[] dy = {0, 0, -1, 1};
         for (int i = 0; i < 4; i++) {
@@ -42,7 +40,7 @@ public class Predator extends Creature {
             }
         }
 
-        // 3. Поиск пути к травоядному
+
         PathFinder pathFinder = new PathFinder();
         Point nextStep = pathFinder.findNextStep(map, currentPos, Herbivore.class);
 
@@ -56,7 +54,6 @@ public class Predator extends Creature {
             return;
         }
 
-        // 5. Иначе — переместиться (если есть куда)
         if (nextStep != null) {
             map.removeEntity(currentPos);
             position = nextStep;

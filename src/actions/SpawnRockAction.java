@@ -1,43 +1,38 @@
 package actions;
 
 import model.GameMap;
-import model.Herbivore;
+import model.Rock;
 
 import java.awt.*;
 import java.util.Random;
 
-public class SpawnHerbivoresAction implements Action {
+public class SpawnRockAction implements Action {
     int count;
     int width;
     int height;
-    int speed;
-    int hp;
-    int maxHp;
 
-    public SpawnHerbivoresAction(int count, int width, int height, int speed, int hp, int maxHp) {
+    public SpawnRockAction(int count, int width, int height) {
         this.count = count;
         this.width = width;
         this.height = height;
-        this.speed = speed;
-        this.hp = hp;
-        this.maxHp = maxHp;
+
     }
 
     @Override
     public void execute(GameMap map) {
-        int maxAttempts = 1000;
         Random random = new Random();
         int spawned = 0;
+        int maxAttempts = 1000;
         while (spawned < count && maxAttempts > 0) {
             int x = random.nextInt(width);
             int y = random.nextInt(height);
             Point point = new Point(x, y);
             if (map.isCellEmpty(point)) {
-                Herbivore herbivore = new Herbivore(this.speed, this.hp, this.maxHp, point);
-                map.addEntity(point, herbivore);
+                Rock rock = new Rock();
+                map.addEntity(point, rock);
                 spawned++;
-                maxAttempts--;
             }
+            maxAttempts--;
         }
     }
 }
