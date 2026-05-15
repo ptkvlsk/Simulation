@@ -3,10 +3,10 @@ package model;
 import java.awt.*;
 
 public abstract class Creature extends Entity {
-    protected int speed;
+    public int speed;
     public int hp;
     public Point position;
-    protected int maxHp;
+    public int maxHp;
 
 
     public Creature(int speed, int hp, int maxHp, Point position) {

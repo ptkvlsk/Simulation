@@ -10,12 +10,13 @@ public class Main {
         simulation.addInitAction(new SpawnTreesAction(30, 30, 30));
 
         simulation.addInitAction(new SpawnGrassAction(150, 30, 30));
-        simulation.addInitAction(new SpawnHerbivoresAction(15, 30, 30, 1, 10, 20));
-        simulation.addInitAction(new SpawnPredatorsAction(5, 30, 30, 1, 15, 15, 5));
+        simulation.addInitAction(new SpawnHerbivoresAction(15, 30, 30, 1, 10, 16));
+        simulation.addInitAction(new SpawnPredatorsAction(22, 30, 30, 1, 15, 15, 10));
 
         simulation.addTurnAction(new MoveHerbivoreAction());
         simulation.addTurnAction(new MovePredotorAction());
         simulation.addTurnAction(new CheckHealthAction());
+        simulation.addTurnAction(new ReproduceHerbivoresAction());
         simulation.addTurnAction(new RegroweGrassAction(150));
 
         simulation.startSimulation();
