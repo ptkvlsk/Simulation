@@ -7,9 +7,9 @@ import java.awt.*;
 import java.util.Random;
 
 public class SpawnRockAction implements Action {
-    int count;
-    int width;
-    int height;
+    private int count;
+    private int width;
+    private int height;
 
     public SpawnRockAction(int count, int width, int height) {
         this.count = count;

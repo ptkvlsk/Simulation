@@ -7,9 +7,9 @@ import java.awt.*;
 import java.util.Random;
 
 public class SpawnTreesAction implements Action {
-    int count;
-    int width;
-    int height;
+    private int count;
+    private int width;
+    private int height;
 
     public SpawnTreesAction(int count, int width, int height) {
         this.count = count;

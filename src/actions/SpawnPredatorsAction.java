@@ -7,13 +7,13 @@ import java.awt.*;
 import java.util.Random;
 
 public class SpawnPredatorsAction implements Action {
-    int count;
-    int width;
-    int height;
-    int speed;
-    int hp;
-    int attackPower;
-    int maxHp;
+    private int count;
+    private int width;
+    private int height;
+    private int speed;
+    private int hp;
+    private int attackPower;
+    private int maxHp;
 
     public SpawnPredatorsAction(int count, int width, int height, int speed, int hp, int maxHp, int attackPower) {
         this.count = count;

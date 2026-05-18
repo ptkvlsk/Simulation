@@ -7,12 +7,12 @@ import java.awt.*;
 import java.util.Random;
 
 public class SpawnHerbivoresAction implements Action {
-    int count;
-    int width;
-    int height;
-    int speed;
-    int hp;
-    int maxHp;
+    private int count;
+    private int width;
+    private int height;
+    private int speed;
+    private int hp;
+    private int maxHp;
 
     public SpawnHerbivoresAction(int count, int width, int height, int speed, int hp, int maxHp) {
         this.count = count;

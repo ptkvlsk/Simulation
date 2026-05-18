@@ -15,10 +15,10 @@ public class Herbivore extends Creature {
 
     @Override
     public void makeMove(GameMap map) {
-        Point currentPos = this.position;
+        Point currentPos = this.getPosition();
         if (map.getEntityAt(currentPos) instanceof Grass) {
             map.removeEntity(currentPos);
-            this.hp = Math.min(this.hp + 2, maxHp);
+            setHp(Math.min(getHp() + 2, getMaxHp()));
             return;
         }
         int[] x = {-1, 1, 0, 0};
@@ -30,9 +30,9 @@ public class Herbivore extends Creature {
             if (map.getEntityAt(neighbor) instanceof Grass) {
                 map.removeEntity(neighbor);
                 map.removeEntity(currentPos);
-                position = neighbor;
-                map.addEntity(position, this);
-                this.hp = Math.min(this.hp + 2, maxHp);
+                setPosition(neighbor);
+                map.addEntity(getPosition(), this);
+                setHp(getHp() + 2);
                 return;
             }
         }
@@ -41,12 +41,15 @@ public class Herbivore extends Creature {
         Point nextStep = pathFinder.findNextStep(map, currentPos, Grass.class);
         if (nextStep != null) {
             map.removeEntity(currentPos);
-            position = nextStep;
-            map.addEntity(position, this);
+            setPosition(nextStep);
+            map.addEntity(getPosition(), this);
+        } else {
+            setHp(getHp() - 1);
         }
+
     }
 
     public void takeDamage(int attackPower) {
-        hp -= attackPower;
+        setHp(getHp() - attackPower);
     }
 }

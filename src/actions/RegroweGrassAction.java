@@ -7,7 +7,7 @@ import java.awt.*;
 import java.util.Random;
 
 public class RegroweGrassAction implements Action {
-    int targetGrassCount;
+    private int targetGrassCount;
 
     public RegroweGrassAction(int targetGrassCount) {
         this.targetGrassCount = targetGrassCount;
