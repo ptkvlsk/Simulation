@@ -1,10 +1,9 @@
 package model;
 
-import pathfinder.PathFinder;
-
 import java.awt.*;
 
 public class Herbivore extends Creature {
+
     public Herbivore(int speed, int hp, int maxHp, Point position) {
         super(speed, hp, maxHp, position);
     }
@@ -14,39 +13,29 @@ public class Herbivore extends Creature {
     }
 
     @Override
+    boolean isTarget(Entity entity) {
+        return entity instanceof Grass;
+    }
+
+    @Override
+    Class<? extends Entity> getTargetClass() {
+        return Grass.class;
+    }
+
+    @Override
+    void interactWithTarget(Entity target, GameMap map, Point position) {
+        map.removeEntity(position);
+        setHp(getHp() + 2);
+    }
+
+    @Override
+    protected void onNoPath(GameMap map) {
+        setHp(getHp() - 1);
+    }
+
+    @Override
     public void makeMove(GameMap map) {
-        Point currentPos = this.getPosition();
-        if (map.getEntityAt(currentPos) instanceof Grass) {
-            map.removeEntity(currentPos);
-            setHp(Math.min(getHp() + 2, getMaxHp()));
-            return;
-        }
-        int[] x = {-1, 1, 0, 0};
-        int[] y = {0, 0, -1, 1};
-        for (int i = 0; i < 4; i++) {
-            int nx = currentPos.x + x[i];
-            int ny = currentPos.y + y[i];
-            Point neighbor = new Point(nx, ny);
-            if (map.getEntityAt(neighbor) instanceof Grass) {
-                map.removeEntity(neighbor);
-                map.removeEntity(currentPos);
-                setPosition(neighbor);
-                map.addEntity(getPosition(), this);
-                setHp(getHp() + 2);
-                return;
-            }
-        }
-
-        PathFinder pathFinder = new PathFinder();
-        Point nextStep = pathFinder.findNextStep(map, currentPos, Grass.class);
-        if (nextStep != null) {
-            map.removeEntity(currentPos);
-            setPosition(nextStep);
-            map.addEntity(getPosition(), this);
-        } else {
-            setHp(getHp() - 1);
-        }
-
+        move(map);
     }
 
     public void takeDamage(int attackPower) {

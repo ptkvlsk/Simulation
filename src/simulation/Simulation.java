@@ -9,10 +9,14 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Simulation {
-    GameMap map;
-    int turnCounter;
-    List<Action> initActions;
-    List<Action> turnActions;
+    private static final int CLEAR_LINES = 50;
+    private static final int TURN_DELAY_MS = 500;
+    private static final String STOP_MESSAGE = "No herbivores left. Stop simulation";
+
+    private final GameMap map;
+    private int turnCounter;
+    private final List<Action> initActions;
+    private final List<Action> turnActions;
 
     public Simulation(int width, int height) {
         map = new GameMap(width, height);
@@ -27,11 +31,11 @@ public class Simulation {
         while (true) {
             nextTurn();
             if (map.getAllHerbivores().isEmpty()) {
-                System.out.println("No herbivorse left. Stop simulation");
+                System.out.println(STOP_MESSAGE);
                 break;
             }
             try {
-                Thread.sleep(500);
+                Thread.sleep(TURN_DELAY_MS);
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
@@ -43,6 +47,9 @@ public class Simulation {
             action.execute(map);
         }
         turnCounter++;
+        for (int i = 0; i < CLEAR_LINES; i++) {
+            System.out.println();
+        }
         System.out.println("Turn" + turnCounter);
         render();
     }
@@ -76,7 +83,6 @@ public class Simulation {
             }
             System.out.println();
         }
-        System.out.println("Herbivores count: "+map.getAllHerbivores().size());
+        System.out.println("Herbivores count: " + map.getAllHerbivores().size());
     }
-
 }

@@ -6,10 +6,11 @@ import model.Grass;
 import java.awt.*;
 import java.util.Random;
 
-public class RegroweGrassAction implements Action {
-    private int targetGrassCount;
+public class RegrowGrassAction implements Action {
 
-    public RegroweGrassAction(int targetGrassCount) {
+    private final int targetGrassCount;
+
+    public RegrowGrassAction(int targetGrassCount) {
         this.targetGrassCount = targetGrassCount;
     }
 
@@ -18,7 +19,7 @@ public class RegroweGrassAction implements Action {
         int currentGrass = map.getAllGrassPositions().size();
         if (currentGrass < targetGrassCount) {
             int toAdd = targetGrassCount - currentGrass;
-            int maxAttempts = 1000;
+            int maxAttempts = map.getWidth() * map.getHeight() * 2;
             Random random = new Random();
             while (toAdd > 0 && maxAttempts > 0) {
                 int x = random.nextInt(map.getWidth());
@@ -32,6 +33,5 @@ public class RegroweGrassAction implements Action {
                 maxAttempts--;
             }
         }
-
     }
 }

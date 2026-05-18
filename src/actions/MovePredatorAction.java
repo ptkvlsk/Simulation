@@ -5,11 +5,12 @@ import model.Predator;
 
 import java.util.List;
 
-public class MovePredatorAction implements Action{
+public class MovePredatorAction implements Action {
+
     @Override
     public void execute(GameMap map) {
         List<Predator> predators = map.getAllPredators();
-        for (Predator p:predators){
+        for (Predator p : predators) {
             p.makeMove(map);
         }
     }

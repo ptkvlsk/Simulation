@@ -7,14 +7,23 @@ import java.awt.*;
 import java.util.Random;
 
 public class SpawnHerbivoresAction implements Action {
-    private int count;
-    private int width;
-    private int height;
-    private int speed;
-    private int hp;
-    private int maxHp;
 
-    public SpawnHerbivoresAction(int count, int width, int height, int speed, int hp, int maxHp) {
+    private final int count;
+    private final int width;
+    private final int height;
+    private final int speed;
+    private final int hp;
+    private final int maxHp;
+
+    public SpawnHerbivoresAction(
+            int count,
+            int width,
+            int height,
+            int speed,
+            int hp,
+            int maxHp
+    ) {
+
         this.count = count;
         this.width = width;
         this.height = height;
@@ -25,7 +34,7 @@ public class SpawnHerbivoresAction implements Action {
 
     @Override
     public void execute(GameMap map) {
-        int maxAttempts = 1000;
+        int maxAttempts = width * height * 2;
         Random random = new Random();
         int spawned = 0;
         while (spawned < count && maxAttempts > 0) {

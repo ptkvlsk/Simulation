@@ -14,6 +14,7 @@ import java.util.Set;
 import java.util.HashSet;
 
 public class PathFinder {
+
     public Point findNextStep(GameMap map, Point start, Class<? extends Entity> targetType) {
         Queue<Point> queue = new LinkedList<Point>();
         Set<Point> visited = new HashSet<Point>();
@@ -25,7 +26,7 @@ public class PathFinder {
             Entity entity = map.getEntityAt(current);
             int[] dx = {-1, 1, 0, 0};
             int[] dy = {0, 0, -1, 1};
-            for (int i = 0; i < 4; i++) {
+            for (int i = 0; i < 4; i++) { // magic
                 int nx = current.x + dx[i];
                 int ny = current.y + dy[i];
                 Point neighbor = new Point(nx, ny);
@@ -38,7 +39,6 @@ public class PathFinder {
                 }
             }
             if (targetType.isInstance(entity)) {
-
                 Point step = current;
                 Point prev = current;
                 while (prev != start) {
@@ -46,7 +46,6 @@ public class PathFinder {
                     prev = previous.get(prev);
                 }
                 return step;
-
             }
         }
         return null;
@@ -59,11 +58,10 @@ public class PathFinder {
         }
         if (targetType.isInstance(entity)) {
             return true;
-
         }
         if (entity instanceof Rock || entity instanceof Tree) {
             return false;
-        }
+        } //подчеркивание смотри
         return false;
     }
 }

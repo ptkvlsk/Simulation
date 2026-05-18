@@ -7,9 +7,10 @@ import java.awt.*;
 import java.util.Random;
 
 public class SpawnGrassAction implements Action {
-    private int count;
-    private int width;
-    private int height;
+
+    private final int count;
+    private final int width;
+    private final int height;
 
     public SpawnGrassAction(int count, int width, int height) {
         this.count = count;
@@ -19,7 +20,7 @@ public class SpawnGrassAction implements Action {
 
     @Override
     public void execute(GameMap map) {
-        int maxAttempts = 1000;
+        int maxAttempts = width * height * 2;
         Random random = new Random();
         int spawned = 0;
         while (spawned < count && maxAttempts > 0) {

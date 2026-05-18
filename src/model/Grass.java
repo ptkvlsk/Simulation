@@ -1,4 +1,4 @@
 package model;
 
-public class Grass extends Entity{
+public class Grass extends Entity {
 }

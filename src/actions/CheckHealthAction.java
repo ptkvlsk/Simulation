@@ -6,6 +6,7 @@ import model.Herbivore;
 import java.util.List;
 
 public class CheckHealthAction implements Action {
+
     @Override
     public void execute(GameMap map) {
         List<Herbivore> herbivores = map.getAllHerbivores();

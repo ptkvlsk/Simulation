@@ -5,10 +5,12 @@ import java.util.*;
 import java.util.List;
 
 public class GameMap {
-    private int width;
-    private int height;
+
+    private final int width;
+    private final int height;
 
     public GameMap(int width, int height) {
+
         this.width = width;
         this.height = height;
         map = new HashMap<>();
@@ -17,13 +19,13 @@ public class GameMap {
     private Map<Point, Entity> map = new HashMap<>();
 
     public void addEntity(Point position, Entity entity) {
-        if (isCellEmpty(position) == true) {
+        if (isCellEmpty(position)) {
             map.put(position, entity);
         }
     }
 
     public void removeEntity(Point position) {
-        if (!isCellEmpty(position) == true) {
+        if (!isCellEmpty(position)) {
             map.remove(position);
         }
     }
