@@ -59,9 +59,6 @@ public class PathFinder {
         if (targetType.isInstance(entity)) {
             return true;
         }
-        if (entity instanceof Rock || entity instanceof Tree) {
-            return false;
-        } //подчеркивание смотри
-        return false;
+        return !(entity instanceof Rock) && !(entity instanceof Tree);
     }
 }
