@@ -38,7 +38,7 @@ public class Predator extends Creature {
     }
 
     @Override
-    protected void onNoPath(GameMap map) { // не исп
+    protected void onNoPath(GameMap map) {
     }
 
     @Override

@@ -8,7 +8,7 @@ public class Main {
 
 
     public static void main(String[] args) {
-        Simulation simulation = new Simulation(WIDTH, HEIGHT); // тоже вынеси значения в структуру тестовых данных
+        Simulation simulation = new Simulation(WIDTH, HEIGHT);
 
         simulation.addInitAction(new SpawnRockAction(30, WIDTH, HEIGHT));
         simulation.addInitAction(new SpawnTreesAction(30, WIDTH, HEIGHT));

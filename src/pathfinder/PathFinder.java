@@ -1,9 +1,6 @@
 package pathfinder;
 
-import model.Entity;
-import model.GameMap;
-import model.Rock;
-import model.Tree;
+import model.*;
 
 import java.awt.*;
 import java.util.Map;
@@ -58,6 +55,12 @@ public class PathFinder {
         }
         if (targetType.isInstance(entity)) {
             return true;
+        }
+        if (entity instanceof Predator) {
+            return false;
+        }
+        if (entity instanceof Grass) {
+            return false;
         }
         return !(entity instanceof Rock) && !(entity instanceof Tree);
     }

@@ -25,9 +25,7 @@ public class GameMap {
     }
 
     public void removeEntity(Point position) {
-        if (!isCellEmpty(position)) {
-            map.remove(position);
-        }
+        map.remove(position);
     }
 
     public Entity getEntityAt(Point position) {
