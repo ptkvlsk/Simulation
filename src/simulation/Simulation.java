@@ -9,7 +9,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Simulation {
-    private static final int CLEAR_LINES = 50;
     private static final int TURN_DELAY_MS = 500;
     private static final String STOP_MESSAGE = "No herbivores left. Stop simulation";
 
@@ -47,9 +46,6 @@ public class Simulation {
             action.execute(map);
         }
         turnCounter++;
-        for (int i = 0; i < CLEAR_LINES; i++) {
-            System.out.println();
-        }
         System.out.println("Turn" + turnCounter);
         render();
     }
