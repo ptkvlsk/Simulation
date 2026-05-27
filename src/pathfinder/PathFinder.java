@@ -1,14 +1,13 @@
 package pathfinder;
 
+import constant.Direction;
 import model.*;
 
 import java.awt.*;
-import java.util.Map;
-import java.util.HashMap;
-import java.util.Queue;
-import java.util.LinkedList;
-import java.util.Set;
-import java.util.HashSet;
+import java.util.*;
+
+import static constant.Direction.DX;
+import static constant.Direction.DY;
 
 public class PathFinder {
 
@@ -20,12 +19,11 @@ public class PathFinder {
         visited.add(start);
         while (!queue.isEmpty()) {
             Point current = queue.poll();
-            Entity entity = map.getEntityAt(current);
-            int[] dx = {-1, 1, 0, 0};
-            int[] dy = {0, 0, -1, 1};
-            for (int i = 0; i < 4; i++) { // magic
-                int nx = current.x + dx[i];
-                int ny = current.y + dy[i];
+            Optional<Entity> optEntity = map.getEntityAt(current);
+
+            for (int i = 0; i < Direction.COUNT; i++) { // magic
+                int nx = current.x + DX[i];
+                int ny = current.y + DY[i];
                 Point neighbor = new Point(nx, ny);
                 int width = map.getWidth();
                 int height = map.getHeight();
@@ -35,7 +33,7 @@ public class PathFinder {
                     previous.put(neighbor, current);
                 }
             }
-            if (targetType.isInstance(entity)) {
+            if (optEntity.isPresent() && targetType.isInstance(optEntity.get())) {
                 Point step = current;
                 Point prev = current;
                 while (prev != start) {
@@ -49,19 +47,14 @@ public class PathFinder {
     }
 
     private boolean isPassible(GameMap map, Point position, Class<?> targetType) {
-        Entity entity = map.getEntityAt(position);
-        if (entity == null) {
-            return true;
-        }
-        if (targetType.isInstance(entity)) {
-            return true;
-        }
-        if (entity instanceof Predator) {
-            return false;
-        }
-        if (entity instanceof Grass) {
-            return false;
-        }
+        Optional<Entity> optEntity = map.getEntityAt(position);
+        if (optEntity.isEmpty()) return true;
+
+        Entity entity = optEntity.get();
+        if (targetType.isInstance(entity)) return true;
+        if (entity instanceof Predator) return false;
+        if (entity instanceof Grass) return false;
+        if (entity instanceof Herbivore) return false;
         return !(entity instanceof Rock) && !(entity instanceof Tree);
     }
 }

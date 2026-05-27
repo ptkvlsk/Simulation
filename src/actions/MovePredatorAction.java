@@ -9,7 +9,7 @@ public class MovePredatorAction implements Action {
 
     @Override
     public void execute(GameMap map) {
-        List<Predator> predators = map.getAllPredators();
+        List<Predator> predators = map.getEntitiesBy(Predator.class);
         for (Predator p : predators) {
             p.makeMove(map);
         }

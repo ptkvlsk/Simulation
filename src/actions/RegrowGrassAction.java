@@ -16,7 +16,7 @@ public class RegrowGrassAction implements Action {
 
     @Override
     public void execute(GameMap map) {
-        int currentGrass = map.getAllGrassPositions().size();
+        int currentGrass = map.getEntitiesBy(Grass.class).size();
         if (currentGrass < targetGrassCount) {
             int toAdd = targetGrassCount - currentGrass;
             int maxAttempts = map.getWidth() * map.getHeight() * 2;

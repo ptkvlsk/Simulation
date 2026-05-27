@@ -7,6 +7,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 public class Simulation {
     private static final int TURN_DELAY_MS = 500;
@@ -29,7 +30,7 @@ public class Simulation {
         }
         while (true) {
             nextTurn();
-            if (map.getAllHerbivores().isEmpty()) {
+            if (map.getEntitiesBy(Herbivore.class).isEmpty()) {
                 System.out.println(STOP_MESSAGE);
                 break;
             }
@@ -62,10 +63,13 @@ public class Simulation {
         for (int y = 0; y < map.getHeight(); y++) {
             for (int x = 0; x < map.getWidth(); x++) {
                 Point point = new Point(x, y);
-                Entity entity = map.getEntityAt(point);
-                if (entity == null) {
+                Optional<Entity> optEntity = map.getEntityAt(point);
+                if (optEntity.isEmpty()) {
                     System.out.print("\uD83D\uDFEB ");
-                } else if (entity instanceof Grass) {
+                    continue;
+                }
+                Entity entity = optEntity.get();
+                if (entity instanceof Grass) {
                     System.out.print("\uD83C\uDF3F ");
                 } else if (entity instanceof Herbivore) {
                     System.out.print("\uD83D\uDC11 ");
@@ -79,6 +83,6 @@ public class Simulation {
             }
             System.out.println();
         }
-        System.out.println("Herbivores count: " + map.getAllHerbivores().size());
+        System.out.println("Herbivores count: " + map.getEntitiesBy(Herbivore.class).size());
     }
 }

@@ -19,7 +19,7 @@ public class Main {
 
         simulation.addTurnAction(new MoveHerbivoreAction());
         simulation.addTurnAction(new MovePredatorAction());
-        simulation.addTurnAction(new CheckHealthAction());
+        simulation.addTurnAction(new DeletedDeathHerbivores());
         simulation.addTurnAction(new ReproduceHerbivoresAction(30, 0.99));
         simulation.addTurnAction(new RegrowGrassAction(180));
 

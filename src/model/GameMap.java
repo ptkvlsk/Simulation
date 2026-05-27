@@ -4,67 +4,64 @@ import java.awt.*;
 import java.util.*;
 import java.util.List;
 
+
 public class GameMap {
 
     private final int width;
     private final int height;
+    private Map<Point, Entity> pointWithEntities = new HashMap<>();
 
     public GameMap(int width, int height) {
 
         this.width = width;
         this.height = height;
-        map = new HashMap<>();
+        pointWithEntities = new HashMap<>();
     }
 
-    private Map<Point, Entity> map = new HashMap<>();
+    private void validate(Point position) {
+        if (position.x < 0 || position.x >= width || position.y < 0 || position.y >= height) {
+            throw new IllegalArgumentException("Position out of bounds: " + position);
+        }
+    }
 
     public void addEntity(Point position, Entity entity) {
-        if (isCellEmpty(position)) {
-            map.put(position, entity);
+        validate(position);
+        if (!isCellEmpty(position)) {
+            throw new IllegalStateException("Cell already occupied: " + position);
         }
+        pointWithEntities.put(position, entity);
+
+        ;
     }
 
     public void removeEntity(Point position) {
-        map.remove(position);
+        validate(position);
+        if (!pointWithEntities.containsKey(position)) {
+            throw new IllegalStateException("No entity at position: " + position);
+        }
+        pointWithEntities.remove(position);
     }
 
-    public Entity getEntityAt(Point position) {
-        return map.get(position);
+    public Optional<Entity> getEntityAt(Point position) {
+        validate(position);
+        return Optional.ofNullable(pointWithEntities.get(position));
     }
 
     public boolean isCellEmpty(Point position) {
-        return !map.containsKey(position);
+        validate(position);
+        return !pointWithEntities.containsKey(position);
     }
 
-    public List<Herbivore> getAllHerbivores() {
-        List<Herbivore> result = new ArrayList<>();
-        for (Entity entity : map.values()) {
-            if (entity instanceof Herbivore) {
-                result.add((Herbivore) entity);
+    public <T extends Entity> List<T> getEntitiesBy(Class<T> type) {
+        List<T> result = new ArrayList<>();
+        for (Entity entity : pointWithEntities.values()) {
+            if (type.isInstance(entity)) {
+                result.add((T) entity);
             }
         }
         return result;
     }
 
-    public List<Predator> getAllPredators() {
-        List<Predator> result = new ArrayList<>();
-        for (Entity entity : map.values()) {
-            if (entity instanceof Predator) {
-                result.add((Predator) entity);
-            }
-        }
-        return result;
-    }
-
-    public Set<Point> getAllGrassPositions() {
-        Set<Point> result = new HashSet<>();
-        for (Map.Entry<Point, Entity> entry : map.entrySet()) {
-            if (entry.getValue() instanceof Grass) {
-                result.add(entry.getKey());
-            }
-        }
-        return result;
-    }
 
     public int getWidth() {
         return width;

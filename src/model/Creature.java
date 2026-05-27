@@ -1,10 +1,27 @@
 package model;
 
 import pathfinder.PathFinder;
+import constant.Direction;
 
 import java.awt.*;
+import java.util.Optional;
+
+import static constant.Direction.DX;
+import static constant.Direction.DY;
 
 public abstract class Creature extends Entity {
+
+    private final int speed;
+    private int hp;
+    private Point position;
+    private final int maxHp;
+
+    public Creature(int speed, int hp, int maxHp, Point position) {
+        this.speed = speed;
+        this.hp = hp;
+        this.maxHp = maxHp;
+        this.position = position;
+    }
 
     public int getSpeed() {
         return speed;
@@ -30,20 +47,6 @@ public abstract class Creature extends Entity {
         return maxHp;
     }
 
-    private final int speed;
-    private int hp;
-    private Point position;
-    private final int maxHp;
-
-
-    public Creature(int speed, int hp, int maxHp, Point position) {
-
-        this.speed = speed;
-        this.hp = hp;
-        this.maxHp = maxHp;
-        this.position = position;
-    }
-
     public abstract void makeMove(GameMap map);
 
     abstract boolean isTarget(Entity entity);
@@ -57,28 +60,36 @@ public abstract class Creature extends Entity {
 
     protected void move(GameMap map) {
         Point currentPos = this.getPosition();
-        Entity entity = map.getEntityAt(currentPos);
-        if (isTarget(entity)) {
-            interactWithTarget(entity, map, currentPos);
+
+        Optional<Entity> optEntity = map.getEntityAt(currentPos);
+        if (optEntity.isPresent() && isTarget(optEntity.get())) {
+            interactWithTarget(optEntity.get(), map, currentPos);
             return;
         }
-        int[] x = {-1, 1, 0, 0};
-        int[] y = {0, 0, -1, 1};
-        for (int i = 0; i < 4; i++) {
-            int nx = currentPos.x + x[i];
-            int ny = currentPos.y + y[i];
-            Point neighbor = new Point(nx, ny);
-            Entity neighborEntity = map.getEntityAt(neighbor);
-            if (isTarget(neighborEntity)) {
-                interactWithTarget(neighborEntity, map, neighbor);
-                return;
+
+        for (int i = 0; i < Direction.COUNT; i++) {
+            int nx = currentPos.x + DX[i];
+            int ny = currentPos.y + DY[i];
+            if (nx >= 0 && nx < map.getWidth() && ny >= 0 && ny < map.getHeight()) {
+                Point neighbor = new Point(nx, ny);
+                Optional<Entity> optNeighbor = map.getEntityAt(neighbor);
+                if (optNeighbor.isPresent() && isTarget(optNeighbor.get())) {
+                    interactWithTarget(optNeighbor.get(), map, neighbor);
+                    return;
+                }
             }
         }
+
         PathFinder pathFinder = new PathFinder();
         Point nextStep = pathFinder.findNextStep(map, currentPos, getTargetClass());
         if (nextStep != null) {
             map.removeEntity(currentPos);
             setPosition(nextStep);
+            if (!map.isCellEmpty(nextStep)) {
+                Optional<Entity> optObstacle = map.getEntityAt(nextStep);
+                String obstacle = optObstacle.map(Object::toString).orElse("unknown");
+                throw new IllegalStateException("Next step " + nextStep + " is not empty, contains: " + obstacle);
+            }
             map.addEntity(getPosition(), this);
         } else {
             onNoPath(map);
