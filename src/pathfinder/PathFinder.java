@@ -1,16 +1,20 @@
 package pathfinder;
 
-import constant.Direction;
+import utill.Direction;
 import model.*;
+import utill.PassabilityChecker;
 
 import java.awt.*;
 import java.util.*;
 import java.util.List;
 
-import static constant.Direction.DX;
-import static constant.Direction.DY;
+import static utill.Direction.DX;
+import static utill.Direction.DY;
 
 public class PathFinder {
+    public PathFinder(PassabilityChecker passabilityChecker) {
+        this.passabilityChecker = passabilityChecker;
+    }
 
     public List<Point> findPath(GameMap map, Point start, Class<? extends Entity> targetType) {
         Queue<Point> queue = new LinkedList<Point>();
@@ -39,7 +43,7 @@ public class PathFinder {
                 int ny = current.y + DY[i];
                 if (nx >= 0 && nx < map.getWidth() && ny >= 0 && ny < map.getHeight()) {
                     Point neighbor = new Point(nx, ny);
-                    if (!visited.contains(neighbor) && isPassible(map, neighbor, targetType)) {
+                    if (!visited.contains(neighbor) && passabilityChecker.isPassible(map,neighbor,targetType)) {
                         queue.add(neighbor);
                         visited.add(neighbor);
                         previous.put(neighbor, current);
@@ -49,16 +53,6 @@ public class PathFinder {
         }
         return Collections.emptyList();
     }
+private final PassabilityChecker passabilityChecker;
 
-    private boolean isPassible(GameMap map, Point position, Class<?> targetType) {
-        Optional<Entity> optEntity = map.getEntityAt(position);
-        if (optEntity.isEmpty()) return true;
-
-        Entity entity = optEntity.get();
-        if (targetType.isInstance(entity)) return true;
-        if (entity instanceof Predator) return false;
-        if (entity instanceof Grass) return false;
-        if (entity instanceof Herbivore) return false;
-        return !(entity instanceof Rock) && !(entity instanceof Tree);
-    }
 }

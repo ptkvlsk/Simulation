@@ -1,6 +1,6 @@
 package actions;
 
-import constant.Direction;
+import utill.Direction;
 import model.Entity;
 import model.GameMap;
 import model.Herbivore;
@@ -12,8 +12,8 @@ import java.util.List;
 import java.util.Optional;
 import java.util.Random;
 
-import static constant.Direction.DX;
-import static constant.Direction.DY;
+import static utill.Direction.DX;
+import static utill.Direction.DY;
 
 public class ReproduceHerbivoresAction implements Action {
     private final int maxHerbivores;

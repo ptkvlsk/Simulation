@@ -1,13 +1,15 @@
 package model;
 
 import pathfinder.PathFinder;
-import constant.Direction;
+import utill.Direction;
+import utill.PassabilityChecker;
 
 import java.awt.*;
+import java.util.List;
 import java.util.Optional;
 
-import static constant.Direction.DX;
-import static constant.Direction.DY;
+import static utill.Direction.DX;
+import static utill.Direction.DY;
 
 public abstract class Creature extends Entity {
 
@@ -80,9 +82,11 @@ public abstract class Creature extends Entity {
             }
         }
 
-        PathFinder pathFinder = new PathFinder();
-        Point nextStep = (Point) pathFinder.findPath(map, currentPos, getTargetClass());
-        if (nextStep != null) {
+        PassabilityChecker checker = new PassabilityChecker();
+        PathFinder pathFinder = new PathFinder(checker);
+        List<Point> path = pathFinder.findPath(map,currentPos,getTargetClass());
+        if (path.size()>1){
+            Point nextStep = path.get(1);
             map.removeEntity(currentPos);
             setPosition(nextStep);
             if (!map.isCellEmpty(nextStep)) {

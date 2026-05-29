@@ -1,4 +1,4 @@
-package constant;
+package utill;
 
 public final class Direction {
     public static final int COUNT = 4;
