@@ -81,7 +81,7 @@ public abstract class Creature extends Entity {
         }
 
         PathFinder pathFinder = new PathFinder();
-        Point nextStep = pathFinder.findNextStep(map, currentPos, getTargetClass());
+        Point nextStep = (Point) pathFinder.findPath(map, currentPos, getTargetClass());
         if (nextStep != null) {
             map.removeEntity(currentPos);
             setPosition(nextStep);

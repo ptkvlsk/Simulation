@@ -5,45 +5,49 @@ import model.*;
 
 import java.awt.*;
 import java.util.*;
+import java.util.List;
 
 import static constant.Direction.DX;
 import static constant.Direction.DY;
 
 public class PathFinder {
 
-    public Point findNextStep(GameMap map, Point start, Class<? extends Entity> targetType) {
+    public List<Point> findPath(GameMap map, Point start, Class<? extends Entity> targetType) {
         Queue<Point> queue = new LinkedList<Point>();
         Set<Point> visited = new HashSet<Point>();
         Map<Point, Point> previous = new HashMap<Point, Point>();
         queue.add(start);
         visited.add(start);
+
         while (!queue.isEmpty()) {
             Point current = queue.poll();
             Optional<Entity> optEntity = map.getEntityAt(current);
+            if (optEntity.isPresent() && targetType.isInstance(optEntity.get())) {
+                List<Point> path = new ArrayList<>();
+                Point point = current;
+                while (point != start) {
+                    path.add(point);
+                    point = previous.get(point);
+                }
+                path.add(0, start);
+                return path;
 
-            for (int i = 0; i < Direction.COUNT; i++) { // magic
+
+            }
+            for (int i = 0; i < Direction.COUNT; i++) {
                 int nx = current.x + DX[i];
                 int ny = current.y + DY[i];
-                Point neighbor = new Point(nx, ny);
-                int width = map.getWidth();
-                int height = map.getHeight();
-                if (nx >= 0 && nx < width && ny >= 0 && ny < height && !visited.contains(neighbor) && isPassible(map, neighbor, targetType)) {
-                    queue.add(neighbor);
-                    visited.add(neighbor);
-                    previous.put(neighbor, current);
+                if (nx >= 0 && nx < map.getWidth() && ny >= 0 && ny < map.getHeight()) {
+                    Point neighbor = new Point(nx, ny);
+                    if (!visited.contains(neighbor) && isPassible(map, neighbor, targetType)) {
+                        queue.add(neighbor);
+                        visited.add(neighbor);
+                        previous.put(neighbor, current);
+                    }
                 }
-            }
-            if (optEntity.isPresent() && targetType.isInstance(optEntity.get())) {
-                Point step = current;
-                Point prev = current;
-                while (prev != start) {
-                    step = prev;
-                    prev = previous.get(prev);
-                }
-                return step;
             }
         }
-        return null;
+        return Collections.emptyList();
     }
 
     private boolean isPassible(GameMap map, Point position, Class<?> targetType) {
