@@ -1,15 +1,13 @@
 package model;
 
 import pathfinder.PathFinder;
-import utill.Direction;
-import utill.PassabilityChecker;
+import util.Direction;
+import util.PassabilityChecker;
 
 import java.awt.*;
 import java.util.List;
 import java.util.Optional;
 
-import static utill.Direction.DX;
-import static utill.Direction.DY;
 
 public abstract class Creature extends Entity {
 
@@ -69,11 +67,10 @@ public abstract class Creature extends Entity {
             return;
         }
 
-        for (int i = 0; i < Direction.COUNT; i++) {
-            int nx = currentPos.x + DX[i];
-            int ny = currentPos.y + DY[i];
-            if (nx >= 0 && nx < map.getWidth() && ny >= 0 && ny < map.getHeight()) {
-                Point neighbor = new Point(nx, ny);
+        for (Point offset : Direction.NEIGHBOR_OFFSETS) {
+            Point neighbor = new Point(currentPos.x + offset.x, currentPos.y + offset.y);
+            if (neighbor.x >= 0 && neighbor.x < map.getWidth()
+                    && neighbor.y >= 0 && neighbor.y < map.getHeight()) {
                 Optional<Entity> optNeighbor = map.getEntityAt(neighbor);
                 if (optNeighbor.isPresent() && isTarget(optNeighbor.get())) {
                     interactWithTarget(optNeighbor.get(), map, neighbor);
@@ -84,9 +81,14 @@ public abstract class Creature extends Entity {
 
         PassabilityChecker checker = new PassabilityChecker();
         PathFinder pathFinder = new PathFinder(checker);
-        List<Point> path = pathFinder.findPath(map,currentPos,getTargetClass());
-        if (path.size()>1){
+        List<Point> path = pathFinder.findPath(map, currentPos, getTargetClass());
+        if (path.size() > 1) {
             Point nextStep = path.get(1);
+            Optional<Entity> optTarget = map.getEntityAt(nextStep);
+            if (optTarget.isPresent() && isTarget(optTarget.get())) {
+                interactWithTarget(optTarget.get(), map, nextStep);
+                return;
+            }
             map.removeEntity(currentPos);
             setPosition(nextStep);
             if (!map.isCellEmpty(nextStep)) {

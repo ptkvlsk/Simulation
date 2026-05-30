@@ -1,6 +1,6 @@
 package actions;
 
-import utill.Direction;
+import util.Direction;
 import model.Entity;
 import model.GameMap;
 import model.Herbivore;
@@ -12,8 +12,6 @@ import java.util.List;
 import java.util.Optional;
 import java.util.Random;
 
-import static utill.Direction.DX;
-import static utill.Direction.DY;
 
 public class ReproduceHerbivoresAction implements Action {
     private final int maxHerbivores;
@@ -37,48 +35,60 @@ public class ReproduceHerbivoresAction implements Action {
                 break;
             }
             if (parent.getHp() > parent.getMaxHp() * hpThreshold) {
-                boolean hasPredator = false;
-                for (int i = 0; i < Direction.COUNT; i++) {
-                    int nx = parent.getPosition().x + DX[i];
-                    int ny = parent.getPosition().y + DY[i];
-                    if (nx >= 0 && nx < map.getWidth() && ny >= 0 && ny < map.getHeight()) {
-                        Point neighbor = new Point(nx, ny);
-                        Optional<Entity> optEntity = map.getEntityAt(neighbor);
-                        if (optEntity.isPresent()&& optEntity.get() instanceof Predator) {
-                            hasPredator = true;
-                            break;
-                        }
-                    }
-                }
-                if (hasPredator) {
+                if (hasPredatorNearby(parent, map)) {
                     continue;
                 }
-                ArrayList<Point> emptyNeighbors = new ArrayList<>();
-                for (int i = 0; i < Direction.COUNT; i++) {
-                    int nx = parent.getPosition().x + DX[i];
-                    int ny = parent.getPosition().y + DY[i];
-                    if (nx >= 0 && nx < map.getWidth() && ny >= 0 && ny < map.getHeight()) {
-                        Point neighbor = new Point(nx, ny);
-                        if (map.isCellEmpty(neighbor)) {
-                            emptyNeighbors.add(neighbor);
-                        }
-                    }
-
-                }
+                List<Point> emptyNeighbors = findEmptyNeighbors(parent, map);
                 if (emptyNeighbors.isEmpty()) {
                     continue;
-                } else {
-                    Point spawnPoint = emptyNeighbors.get(random.nextInt(emptyNeighbors.size()));
-                    double chance = BASE_CHANCE - (currentCount / (double) maxHerbivores);
-                    if (random.nextDouble() >= chance) {
-                        continue;
-                    }
-                    Herbivore child = new Herbivore(parent.getSpeed(), parent.getMaxHp() / 2, parent.getMaxHp(), spawnPoint);
-                    map.addEntity(spawnPoint, child);
-                    parent.setHp(parent.getHp() / 2);
                 }
+                Point spawnPoint = emptyNeighbors.get(random.nextInt(emptyNeighbors.size()));
+                if (!shouldReproduce(currentCount, maxHerbivores, random)) {
+                    continue;
+                }
+                createChild(parent, spawnPoint, map);
                 currentCount++;
             }
         }
     }
+
+    private boolean hasPredatorNearby(Herbivore parent, GameMap map) {
+        boolean hasPredator = false;
+        for (Point offset : Direction.NEIGHBOR_OFFSETS) {
+            Point neighbor = new Point(parent.getPosition().x + offset.x,
+                    parent.getPosition().y + offset.y);
+            if (neighbor.x >= 0 && neighbor.x < map.getWidth() && neighbor.y >= 0 && neighbor.y < map.getHeight()) {
+                Optional<Entity> optEntity = map.getEntityAt(neighbor);
+                if (optEntity.isPresent() && optEntity.get() instanceof Predator) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
+    private List<Point> findEmptyNeighbors(Herbivore parent, GameMap map) {
+        List<Point> emptyNeighbors = new ArrayList<>();
+        for (Point offset : Direction.NEIGHBOR_OFFSETS) {
+            Point neighbor = new Point(parent.getPosition().x + offset.x, parent.getPosition().y + offset.y);
+            if (neighbor.x >= 0 && neighbor.x < map.getWidth() && neighbor.y >= 0 && neighbor.y < map.getHeight()) {
+                if (map.isCellEmpty(neighbor)) {
+                    emptyNeighbors.add(neighbor);
+                }
+            }
+        }
+        return emptyNeighbors;
+    }
+
+    private boolean shouldReproduce(int currentCount, int maxHerbivores, Random random) {
+        double chance = BASE_CHANCE - (currentCount / (double) maxHerbivores);
+        return random.nextDouble() < chance;
+    }
+
+    private void createChild(Herbivore parent, Point spawnPoint, GameMap map) {
+        Herbivore child = new Herbivore(parent.getSpeed(), parent.getMaxHp() / 2, parent.getMaxHp(), spawnPoint);
+        map.addEntity(spawnPoint, child);
+        parent.setHp(parent.getHp() / 2);
+    }
 }
+
