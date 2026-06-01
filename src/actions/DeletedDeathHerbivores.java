@@ -12,7 +12,7 @@ public class DeletedDeathHerbivores implements Action {
         List<Herbivore> herbivores = map.getEntitiesBy(Herbivore.class);
         for (Herbivore h : herbivores) {
             if (h.getHp() <= 0) {
-                map.removeEntity(h.getPosition());
+                map.getEntityAt(h.getPosition()).ifPresent(entity -> map.removeEntity(h.getPosition()));
             }
         }
     }

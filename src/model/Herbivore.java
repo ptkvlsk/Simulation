@@ -34,11 +34,6 @@ public class Herbivore extends Creature {
         setHp(getHp() - HUNGER_DAMAGE);
     }
 
-    @Override
-    public void makeMove(GameMap map) {
-        move(map);
-    }
-
     public void takeDamage(int attackPower) {
         setHp(getHp() - attackPower);
     }

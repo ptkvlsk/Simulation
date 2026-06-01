@@ -43,8 +43,4 @@ public class Predator extends Creature {
     protected void onNoPath(GameMap map) {
     }
 
-    @Override
-    public void makeMove(GameMap map) {
-        move(map);
-    }
 }

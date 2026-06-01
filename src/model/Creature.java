@@ -46,7 +46,9 @@ public abstract class Creature extends Entity {
         return maxHp;
     }
 
-    public abstract void makeMove(GameMap map);
+    public void makeMove(GameMap map){
+        move(map);
+    };
 
     protected abstract boolean isTarget(Entity entity);
 
@@ -82,6 +84,9 @@ public abstract class Creature extends Entity {
         }
         Point nextStep = path.get(1);
         if (tryInteractAt(map,nextStep)){
+            return;
+        }
+        if (map.getEntityAt(getPosition()).orElse(null)!=this){
             return;
         }
         map.removeEntity(getPosition());
