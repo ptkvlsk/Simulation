@@ -2,6 +2,7 @@ package actions;
 
 import model.GameMap;
 import model.Herbivore;
+import pathfinder.PathFinder;
 
 import java.awt.*;
 import java.util.Random;
@@ -14,6 +15,7 @@ public class SpawnHerbivoresAction implements Action {
     private final int speed;
     private final int hp;
     private final int maxHp;
+    private final PathFinder pathFinder;
 
     public SpawnHerbivoresAction(
             int count,
@@ -21,7 +23,8 @@ public class SpawnHerbivoresAction implements Action {
             int height,
             int speed,
             int hp,
-            int maxHp
+            int maxHp,
+            PathFinder pathFinder
     ) {
 
         this.count = count;
@@ -30,6 +33,7 @@ public class SpawnHerbivoresAction implements Action {
         this.speed = speed;
         this.hp = hp;
         this.maxHp = maxHp;
+        this.pathFinder = pathFinder;
     }
 
     @Override
@@ -42,7 +46,7 @@ public class SpawnHerbivoresAction implements Action {
             int y = random.nextInt(height);
             Point point = new Point(x, y);
             if (map.isCellEmpty(point)) {
-                Herbivore herbivore = new Herbivore(this.speed, this.hp, this.maxHp, point);
+                Herbivore herbivore = new Herbivore(this.speed, this.hp, this.maxHp, point, pathFinder);
                 map.addEntity(point, herbivore);
                 spawned++;
                 maxAttempts--;

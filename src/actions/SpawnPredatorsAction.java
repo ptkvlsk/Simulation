@@ -2,6 +2,7 @@ package actions;
 
 import model.GameMap;
 import model.Predator;
+import pathfinder.PathFinder;
 
 import java.awt.*;
 import java.util.Random;
@@ -15,8 +16,9 @@ public class SpawnPredatorsAction implements Action {
     private final int hp;
     private final int attackPower;
     private final int maxHp;
+    private final PathFinder pathFinder;
 
-    public SpawnPredatorsAction(int count, int width, int height, int speed, int hp, int maxHp, int attackPower) {
+    public SpawnPredatorsAction(int count, int width, int height, int speed, int hp, int maxHp, int attackPower, PathFinder pathFinder) {
 
         this.count = count;
         this.width = width;
@@ -25,6 +27,7 @@ public class SpawnPredatorsAction implements Action {
         this.hp = hp;
         this.attackPower = attackPower;
         this.maxHp = maxHp;
+        this.pathFinder = pathFinder;
     }
 
     @Override
@@ -37,7 +40,7 @@ public class SpawnPredatorsAction implements Action {
             int y = random.nextInt(height);
             Point point = new Point(x, y);
             if (map.isCellEmpty(point)) {
-                Predator predator = new Predator(this.speed, this.hp, this.attackPower, this.maxHp, point);
+                Predator predator = new Predator(this.speed, this.hp, this.attackPower, this.maxHp, point, pathFinder);
                 map.addEntity(point, predator);
                 spawned++;
                 maxAttempts--;

@@ -1,36 +1,37 @@
 package model;
 
+import pathfinder.PathFinder;
+
 import java.awt.*;
 
 public class Herbivore extends Creature {
+    private static final int GRASS_HEAL_AMOUNT = 2;
+    private static final int HUNGER_DAMAGE = 1;
 
-    public Herbivore(int speed, int hp, int maxHp, Point position) {
-        super(speed, hp, maxHp, position);
+    public Herbivore(int speed, int hp, int maxHp, Point position, PathFinder pathFinder) {
+        super(speed, hp, maxHp, position, pathFinder);
     }
 
-    public void ateGrass() {
-
-    }
 
     @Override
-    boolean isTarget(Entity entity) {
+    protected boolean isTarget(Entity entity) {
         return entity instanceof Grass;
     }
 
     @Override
-    Class<? extends Entity> getTargetClass() {
+    protected Class<? extends Entity> getTargetClass() {
         return Grass.class;
     }
 
     @Override
-    void interactWithTarget(Entity target, GameMap map, Point position) {
+    protected void interactWithTarget(Entity target, GameMap map, Point position) {
         map.removeEntity(position);
-        setHp(getHp() + 2);
+        setHp(getHp() + GRASS_HEAL_AMOUNT);
     }
 
     @Override
     protected void onNoPath(GameMap map) {
-        setHp(getHp() - 1);
+        setHp(getHp() - HUNGER_DAMAGE);
     }
 
     @Override

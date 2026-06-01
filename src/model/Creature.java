@@ -1,12 +1,9 @@
 package model;
 
 import pathfinder.PathFinder;
-import util.Direction;
-import util.PassabilityChecker;
 
 import java.awt.*;
 import java.util.List;
-import java.util.Optional;
 
 
 public abstract class Creature extends Entity {
@@ -15,12 +12,14 @@ public abstract class Creature extends Entity {
     private int hp;
     private Point position;
     private final int maxHp;
+    private final PathFinder pathFinder;
 
-    public Creature(int speed, int hp, int maxHp, Point position) {
+    public Creature(int speed, int hp, int maxHp, Point position, PathFinder pathFinder) {
         this.speed = speed;
         this.hp = hp;
         this.maxHp = maxHp;
         this.position = position;
+        this.pathFinder = pathFinder;
     }
 
     public int getSpeed() {
@@ -49,56 +48,45 @@ public abstract class Creature extends Entity {
 
     public abstract void makeMove(GameMap map);
 
-    abstract boolean isTarget(Entity entity);
+    protected abstract boolean isTarget(Entity entity);
 
     abstract Class<? extends Entity> getTargetClass();
 
     abstract void interactWithTarget(Entity target, GameMap map, Point position);
 
-    protected void onNoPath(GameMap map) {
+    protected abstract void onNoPath(GameMap map);
+
+    private void interactIfTarget(GameMap map) {
+        map.getEntityAt(getPosition()).filter(this::isTarget).ifPresent(target -> interactWithTarget(target,
+                map,
+                getPosition()));
+    }
+
+    private boolean tryInteractAt(GameMap map, Point position) {
+        return map.getEntityAt(position).filter(this::isTarget).map(target -> {
+            interactWithTarget(target, map, position);
+            return true;
+        }).orElse(false);
     }
 
     protected void move(GameMap map) {
-        Point currentPos = this.getPosition();
 
-        Optional<Entity> optEntity = map.getEntityAt(currentPos);
-        if (optEntity.isPresent() && isTarget(optEntity.get())) {
-            interactWithTarget(optEntity.get(), map, currentPos);
+        List<Point> path = pathFinder.findPath(map, getPosition(), getTargetClass());
+        if (path.isEmpty()) {
+            onNoPath(map);
             return;
         }
-
-        for (Point offset : Direction.NEIGHBOR_OFFSETS) {
-            Point neighbor = new Point(currentPos.x + offset.x, currentPos.y + offset.y);
-            if (neighbor.x >= 0 && neighbor.x < map.getWidth()
-                    && neighbor.y >= 0 && neighbor.y < map.getHeight()) {
-                Optional<Entity> optNeighbor = map.getEntityAt(neighbor);
-                if (optNeighbor.isPresent() && isTarget(optNeighbor.get())) {
-                    interactWithTarget(optNeighbor.get(), map, neighbor);
-                    return;
-                }
-            }
+        if (path.size() == 1) {
+            interactIfTarget(map);
+            return;
         }
-
-        PassabilityChecker checker = new PassabilityChecker();
-        PathFinder pathFinder = new PathFinder(checker);
-        List<Point> path = pathFinder.findPath(map, currentPos, getTargetClass());
-        if (path.size() > 1) {
-            Point nextStep = path.get(1);
-            Optional<Entity> optTarget = map.getEntityAt(nextStep);
-            if (optTarget.isPresent() && isTarget(optTarget.get())) {
-                interactWithTarget(optTarget.get(), map, nextStep);
-                return;
-            }
-            map.removeEntity(currentPos);
-            setPosition(nextStep);
-            if (!map.isCellEmpty(nextStep)) {
-                Optional<Entity> optObstacle = map.getEntityAt(nextStep);
-                String obstacle = optObstacle.map(Object::toString).orElse("unknown");
-                throw new IllegalStateException("Next step " + nextStep + " is not empty, contains: " + obstacle);
-            }
-            map.addEntity(getPosition(), this);
-        } else {
-            onNoPath(map);
+        Point nextStep = path.get(1);
+        if (tryInteractAt(map,nextStep)){
+            return;
         }
+        map.removeEntity(getPosition());
+        setPosition(nextStep);
+        map.addEntity(getPosition(), this);
+        interactIfTarget(map);
     }
 }

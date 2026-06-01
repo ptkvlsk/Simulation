@@ -1,5 +1,6 @@
 package actions;
 
+import pathfinder.PathFinder;
 import util.Direction;
 import model.Entity;
 import model.GameMap;
@@ -18,11 +19,13 @@ public class ReproduceHerbivoresAction implements Action {
     private final double hpThreshold;
     private static final double BASE_CHANCE = 1.0;
     private final Random random = new Random();
+    private final PathFinder pathFinder;
 
 
-    public ReproduceHerbivoresAction(int maxHerbivores, double hpThreshold) {
+    public ReproduceHerbivoresAction(int maxHerbivores, double hpThreshold, PathFinder pathFinder) {
         this.maxHerbivores = maxHerbivores;
         this.hpThreshold = hpThreshold;
+        this.pathFinder = pathFinder;
     }
 
     @Override
@@ -86,7 +89,7 @@ public class ReproduceHerbivoresAction implements Action {
     }
 
     private void createChild(Herbivore parent, Point spawnPoint, GameMap map) {
-        Herbivore child = new Herbivore(parent.getSpeed(), parent.getMaxHp() / 2, parent.getMaxHp(), spawnPoint);
+        Herbivore child = new Herbivore(parent.getSpeed(), parent.getMaxHp() / 2, parent.getMaxHp(), spawnPoint, pathFinder);
         map.addEntity(spawnPoint, child);
         parent.setHp(parent.getHp() / 2);
     }
