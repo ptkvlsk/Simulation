@@ -28,15 +28,6 @@ public class Simulation {
         this.turnActions = new ArrayList<>();
     }
 
-    public void nextTurn() {
-        for (Action action : turnActions) {
-            action.execute(map);
-        }
-        turnCounter++;
-        System.out.println("Turn" + turnCounter);
-        render.render(map);
-    }
-
     public void startSimulation() {
         if (!initialized) {
             for (Action action : initActions) {
@@ -45,18 +36,8 @@ public class Simulation {
             initialized = true;
         }
         running = true;
-        while (running) {
-            nextTurn();
-            if (map.getEntitiesBy(Herbivore.class).isEmpty()) {
-                System.out.println(STOP_MESSAGE);
-                break;
-            }
-            try {
-                Thread.sleep(TURN_DELAY_MS);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-        }
+        runLoop();
+
     }
 
     public void pauseSimulation() {
@@ -65,14 +46,7 @@ public class Simulation {
 
     public void resumeSimulation() {
         running = true;
-        while (running && !map.getEntitiesBy(Herbivore.class).isEmpty()) {
-            nextTurn();
-            try {
-                Thread.sleep(TURN_DELAY_MS);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-        }
+        runLoop();
     }
 
     public void addInitAction(Action action) {
@@ -83,12 +57,32 @@ public class Simulation {
         turnActions.add(action);
     }
 
-    public boolean isInitialized() {
+    private boolean isInitialized() {
         return initialized;
     }
 
-    public void setInitialized(boolean initialized) {
+    private void setInitialized(boolean initialized) {
         this.initialized = initialized;
+    }
+
+    private void runLoop() {
+        while (running && !map.getEntitiesBy(Herbivore.class).isEmpty()) {
+            nextTurn();
+            try {
+                Thread.sleep(TURN_DELAY_MS);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    private void nextTurn() {
+        for (Action action : turnActions) {
+            action.execute(map);
+        }
+        turnCounter++;
+        System.out.println("Turn" + turnCounter);
+        render.render(map);
     }
 }
 
