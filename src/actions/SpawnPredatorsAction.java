@@ -9,6 +9,7 @@ import java.util.Random;
 
 public class SpawnPredatorsAction implements Action {
 
+    private static final int ATTEMPTS_MULTIPLIER = 2;
     private final int count;
     private final int width;
     private final int height;
@@ -32,7 +33,7 @@ public class SpawnPredatorsAction implements Action {
 
     @Override
     public void execute(GameMap map) {
-        int maxAttempts = width * height * 2;
+        int maxAttempts = width * height * ATTEMPTS_MULTIPLIER;
         Random random = new Random(); // можно в экшн
         int spawned = 0;
         while (spawned < count && maxAttempts > 0) {

@@ -12,7 +12,6 @@ public class Herbivore extends Creature {
         super(speed, hp, maxHp, position, pathFinder);
     }
 
-
     @Override
     protected boolean isTarget(Entity entity) {
         return entity instanceof Grass;

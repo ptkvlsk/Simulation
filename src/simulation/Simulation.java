@@ -46,7 +46,7 @@ public class Simulation {
 
     public void resumeSimulation() {
         running = true;
-        runLoop();
+        new Thread(this::runLoop).start();
     }
 
     public void addInitAction(Action action) {
@@ -57,14 +57,6 @@ public class Simulation {
         turnActions.add(action);
     }
 
-    private boolean isInitialized() {
-        return initialized;
-    }
-
-    private void setInitialized(boolean initialized) {
-        this.initialized = initialized;
-    }
-
     private void runLoop() {
         while (running && !map.getEntitiesBy(Herbivore.class).isEmpty()) {
             nextTurn();
@@ -73,6 +65,9 @@ public class Simulation {
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
+        }
+        if (map.getEntitiesBy(Herbivore.class).isEmpty()){
+            System.out.println(STOP_MESSAGE);
         }
     }
 

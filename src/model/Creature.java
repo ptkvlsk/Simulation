@@ -48,7 +48,7 @@ public abstract class Creature extends Entity {
 
     public void makeMove(GameMap map){
         move(map);
-    };
+    }
 
     protected abstract boolean isTarget(Entity entity);
 

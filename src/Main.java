@@ -1,4 +1,5 @@
 import actions.*;
+import input.ConsoleInputHandler;
 import render.ConsoleRender;
 import render.Render;
 import simulation.Simulation;
@@ -25,7 +26,7 @@ public class Main {
         simulation.addTurnAction(new DeletedDeathHerbivores());
         simulation.addTurnAction(new ReproduceHerbivoresAction(30, 0.85, pathFinder));
         simulation.addTurnAction(new RegrowGrassAction(180));
-
-        simulation.startSimulation();
+        ConsoleInputHandler consoleInputHandler = new ConsoleInputHandler(simulation);
+        consoleInputHandler.startListening();
     }
 }

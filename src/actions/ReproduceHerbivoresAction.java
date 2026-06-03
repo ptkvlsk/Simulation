@@ -56,7 +56,6 @@ public class ReproduceHerbivoresAction implements Action {
     }
 
     private boolean hasPredatorNearby(Herbivore parent, GameMap map) {
-        boolean hasPredator = false;
         for (Point offset : Direction.NEIGHBOR_OFFSETS) {
             Point neighbor = new Point(parent.getPosition().x + offset.x,
                     parent.getPosition().y + offset.y);
