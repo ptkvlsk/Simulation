@@ -15,6 +15,7 @@ import java.util.Random;
 
 
 public class ReproduceHerbivoresAction implements Action {
+    private final int HP_DIVISOR =2;
     private final int maxHerbivores;
     private final double hpThreshold;
     private static final double BASE_CHANCE = 1.0;
@@ -88,9 +89,9 @@ public class ReproduceHerbivoresAction implements Action {
     }
 
     private void createChild(Herbivore parent, Point spawnPoint, GameMap map) {
-        Herbivore child = new Herbivore(parent.getSpeed(), parent.getMaxHp() / 2, parent.getMaxHp(), spawnPoint, pathFinder);
+        Herbivore child = new Herbivore(parent.getSpeed(), parent.getMaxHp() / HP_DIVISOR, parent.getMaxHp(), spawnPoint, pathFinder);
         map.addEntity(spawnPoint, child);
-        parent.setHp(parent.getHp() / 2);
+        parent.setHp(parent.getHp() / HP_DIVISOR);
     }
 }
 
